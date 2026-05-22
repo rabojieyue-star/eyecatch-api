@@ -29,9 +29,9 @@ COLORS = {
     }
 }
 
-SERIF_JP = "/app/fonts/NotoSerifCJK-Bold.ttc"
-SANS_JP  = "/app/fonts/NotoSansCJK-Regular.ttc"
-LORA     = "/app/fonts/Lora-Variable.ttf"
+SERIF_JP = "/usr/share/fonts/truetype/noto/NotoSerifCJK-Bold.ttc"
+SANS_JP  = "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"
+LORA     = "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"
 
 def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     # 背景画像ダウンロード
