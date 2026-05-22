@@ -160,16 +160,3 @@ def health():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-flask
-pillow
-requests
-gunicorn
-
-#!/bin/bash
-# フォントダウンロード
-mkdir -p /app/fonts
-
-cp /usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc /app/fonts/
-cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc /app/fonts/
-pip install -r requirements.txt
