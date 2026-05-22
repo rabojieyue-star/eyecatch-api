@@ -169,7 +169,7 @@ gunicorn
 #!/bin/bash
 # フォントダウンロード
 mkdir -p /app/fonts
-apt-get install -y fonts-noto-cjk
+
 cp /usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc /app/fonts/
 cp /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc /app/fonts/
 pip install -r requirements.txt
