@@ -139,12 +139,11 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     draw.line([(X, t_y + 16), (550, t_y + 16)], fill=gold, width=1)
 
 # サブコピー
-sub_text = "プロが教える美容の知恵" if blog_type == "debel" else "プロが教える節約の知恵"
-draw.text((X, t_y + 30), sub_text, font=f_sub, fill=beige if blog_type == "debel" else (120, 85, 55))
-# 下部ライン
-draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
-
-# ブランドバッジ（Mサイズ 高さ38px）
+    sub_text = "プロが教える美容の知恵" if blog_type == "debel" else "プロが教える節約の知恵"
+    draw.text((X, t_y + 30), sub_text, font=f_sub, fill=beige if blog_type == "debel" else (120, 85, 55))
+    # 下部ライン
+    draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
+    # ブランドバッジ（Mサイズ 高さ38px）
     brand_text = "DEBEL | 痩身美容ラボ" if blog_type == "debel" else "節約ラボ｜setsuyaku-lab.jp"
     try:
         f_brand_m = ImageFont.truetype(LORA, 17)
