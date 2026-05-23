@@ -38,22 +38,19 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     resp = requests.get(image_url, timeout=30)
     img = Image.open(io.BytesIO(resp.content)).convert("RGB")
     img = img.resize((W, H), Image.LANCZOS)
-
     colors = COLORS.get(blog_type, COLORS["setsuyaku"])
 
     # 左側パネル
     from PIL import Image as PILImage
     overlay = PILImage.new("RGBA", (W, H), (0, 0, 0, 0))
     ov = ImageDraw.Draw(overlay)
+    panel_w = 520  # ③ 白エリアを少し狭く
 
-    panel_w = 600
-    # 左側を単色パネルに
     panel_color = colors["panel"]
-    ov.rectangle([(0, 0), (panel_w, H)], fill=(*panel_color, 230))
-
-    # 境界グラデーション
-    for x in range(150):
-        alpha = int(220 * (1 - x / 150))
+    ov.rectangle([(0, 0), (panel_w, H)], fill=(*panel_color, 200))  # ③ 不透明度を下げる
+    # 境界グラデーション（shorter fade）
+    for x in range(120):  # ③ グラデーション幅を短く
+        alpha = int(200 * (1 - x / 120))
         ov.rectangle([(panel_w + x, 0), (panel_w + x + 1, H)], fill=(*panel_color, alpha))
 
     img = PILImage.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
@@ -67,12 +64,12 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
 
     # フォント
     try:
-        f_cat   = ImageFont.truetype(SANS_JP, 17)
+        f_cat    = ImageFont.truetype(SANS_JP, 17)
         f_title1 = ImageFont.truetype(SERIF_JP, 54)
         f_title2 = ImageFont.truetype(SERIF_JP, 46)
-        f_sub   = ImageFont.truetype(SANS_JP, 19)
-        f_brand = ImageFont.truetype(LORA, 17)
-        f_by    = ImageFont.truetype(SANS_JP, 13)
+        f_sub    = ImageFont.truetype(SANS_JP, 19)
+        f_brand  = ImageFont.truetype(LORA, 17)
+        f_by     = ImageFont.truetype(SANS_JP, 13)
     except:
         f_cat = f_title1 = f_title2 = f_sub = f_brand = f_by = ImageFont.load_default()
 
@@ -81,25 +78,29 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     # 左縦ゴールドライン
     draw.line([(44, 44), (44, H - 44)], fill=gold, width=2)
 
-    # カテゴリーバッジ
+    # ① カテゴリーバッジ（テキスト垂直中央揃え）
     bbox = draw.textbbox((0, 0), category, font=f_cat)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    draw.rounded_rectangle([(X, 56), (X + tw + 32, 56 + th + 12)], radius=4, fill=terra)
-    draw.text((X + 16, 62), category, font=f_cat, fill=white)
+    tw = bbox[2] - bbox[0]
+    th = bbox[3] - bbox[1]
+    badge_top = 56
+    badge_bottom = badge_top + th + 16
+    badge_mid_y = badge_top + (badge_bottom - badge_top - th) // 2 - bbox[1]
+    draw.rounded_rectangle([(X, badge_top), (X + tw + 32, badge_bottom)], radius=4, fill=terra)
+    draw.text((X + 16, badge_mid_y), category, font=f_cat, fill=white)  # ① 垂直中央
 
     # ゴールドライン
-    line_y = 56 + th + 12 + 22
+    line_y = badge_bottom + 22
     draw.line([(X, line_y), (X + 50, line_y)], fill=gold, width=2)
 
-    # タイトルを分割して表示
+    # ④ タイトル改行ロジック改善（自然な区切り）
     t_y = line_y + 24
-    if len(title) <= 14:
+    if len(title) <= 13:
         lines = [title]
-    elif len(title) <= 24:
-        mid = len(title) // 2
-        lines = [title[:mid], title[mid:]]
+    elif len(title) <= 26:
+        split = 13  # 13文字で自然に折り返す
+        lines = [title[:split], title[split:]]
     else:
-        lines = [title[:12], title[12:24], title[24:]]
+        lines = [title[:13], title[13:26], title[26:]]
 
     for i, line in enumerate(lines):
         size = 54 if i == 0 else 46
@@ -120,20 +121,20 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     # 下部ライン
     draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
 
-    # ブランド
-    brand = "DEBEL | 痩身美容ラボ" if blog_type == "debel" else "節約ラボ | setsuyaku-lab.jp"
-    try:
-        draw.text((X, H - 38), brand, font=f_brand, fill=gold)
-    except:
-        pass
+    # ① ブランドをバッジ化
+    brand_text = "DEBEL | 痩身美容ラボ" if blog_type == "debel" else "節約ラボ｜setsuyaku-lab.jp"
+    b_bbox = draw.textbbox((0, 0), brand_text, font=f_brand)
+    bw = b_bbox[2] - b_bbox[0]
+    bh = b_bbox[3] - b_bbox[1]
+    brand_y = H - 44
+    draw.rectangle([(X, brand_y - bh - 8), (X + bw + 20, brand_y)], fill=gold)
+    draw.text((X + 10, brand_y - bh - 4 - b_bbox[1]), brand_text, font=f_brand, fill=white)
 
     # base64エンコード
     buffer = io.BytesIO()
     img.save(buffer, format="JPEG", quality=95)
     img_b64 = base64.b64encode(buffer.getvalue()).decode()
-
     return img_b64
-
 
 @app.route("/generate", methods=["POST"])
 def generate():
