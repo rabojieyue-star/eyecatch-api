@@ -143,63 +143,52 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     draw.text((X, t_y + 30), sub_text, font=f_sub, fill=beige if blog_type == "debel" else (120, 85, 55))
     # 下部ライン
     draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
-   # ブランドバッジ（DEBELスタイリッシュ版）
+  # ブランドバッジ（DEBELスタイリッシュ版）
     if blog_type == "debel":
-        bw, bh = 280, 100
+        bw, bh = 240, 90
         bx = X
-        by = H - 44 - bh
-
+        by = H - 44 - bh - 10
         # 外枠
         draw.rectangle([(bx, by), (bx + bw, by + bh)], outline=gold, width=3)
         # 内枠
         draw.rectangle([(bx + 8, by + 8), (bx + bw - 8, by + bh - 8)], outline=(*gold, 120), width=1)
-
-# コーナー装飾
+        # コーナー装飾
         corner_len = 20
         corner_w = 4
-        # 左上
         draw.rectangle([(bx, by), (bx + corner_len, by + corner_w)], fill=gold)
         draw.rectangle([(bx, by), (bx + corner_w, by + corner_len)], fill=gold)
-        # 右上
         draw.rectangle([(bx + bw - corner_len, by), (bx + bw, by + corner_w)], fill=gold)
         draw.rectangle([(bx + bw - corner_w, by), (bx + bw, by + corner_len)], fill=gold)
-        # 左下
         draw.rectangle([(bx, by + bh - corner_w), (bx + corner_len, by + bh)], fill=gold)
         draw.rectangle([(bx, by + bh - corner_len), (bx + corner_w, by + bh)], fill=gold)
-        # 右下
         draw.rectangle([(bx + bw - corner_len, by + bh - corner_w), (bx + bw, by + bh)], fill=gold)
         draw.rectangle([(bx + bw - corner_w, by + bh - corner_len), (bx + bw, by + bh)], fill=gold)
-
         # 上部ダイヤ装飾
         mid_x = bx + bw // 2
-        top_line_y = by + 28
+        top_line_y = by + 24
         draw.line([(bx + 24, top_line_y), (mid_x - 14, top_line_y)], fill=gold, width=1)
         draw.polygon([(mid_x, top_line_y - 6), (mid_x + 6, top_line_y), (mid_x, top_line_y + 6), (mid_x - 6, top_line_y)], fill=gold)
         draw.line([(mid_x + 14, top_line_y), (bx + bw - 24, top_line_y)], fill=gold, width=1)
-
-# DEBELサブテキスト
+        # フォント
         try:
-            f_debel_sub = ImageFont.truetype(LORA, 18)      # ← 13→18に拡大
+            f_debel_sub = ImageFont.truetype(LORA, 18)
             f_debel_main = ImageFont.truetype(SERIF_JP, 26)
         except:
             f_debel_sub = f_debel_main = ImageFont.load_default()
-
+        # DEBELテキスト
         sub_bbox = draw.textbbox((0, 0), "DEBEL", font=f_debel_sub)
         sub_w = sub_bbox[2] - sub_bbox[0]
-        draw.text((bx + (bw - sub_w) // 2, top_line_y + 6), "DEBEL", font=f_debel_sub, fill=(*gold, 200))  # ← 透明度も上げる
-
-        # 痩身美容ラボ メインテキスト
+        draw.text((bx + (bw - sub_w) // 2, top_line_y + 5), "DEBEL", font=f_debel_sub, fill=(*gold, 200))
+        # 痩身美容ラボテキスト
         main_text = "痩身美容ラボ"
         main_bbox = draw.textbbox((0, 0), main_text, font=f_debel_main)
         main_w = main_bbox[2] - main_bbox[0]
-        draw.text((bx + (bw - main_w) // 2, by + 56), main_text, font=f_debel_main, fill=gold)  # ← 位置微調整
-
+        draw.text((bx + (bw - main_w) // 2, by + 48), main_text, font=f_debel_main, fill=gold)
         # 下部ダイヤ装飾
-        bot_line_y = by + bh - 28
+        bot_line_y = by + bh - 22
         draw.line([(bx + 24, bot_line_y), (mid_x - 14, bot_line_y)], fill=gold, width=1)
         draw.polygon([(mid_x, bot_line_y - 6), (mid_x + 6, bot_line_y), (mid_x, bot_line_y + 6), (mid_x - 6, bot_line_y)], fill=gold)
         draw.line([(mid_x + 14, bot_line_y), (bx + bw - 24, bot_line_y)], fill=gold, width=1)
-
     else:
         # 節約ラボバッジ（既存）
         brand_text = "節約ラボ｜setsuyaku-lab.jp"
@@ -217,7 +206,7 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
         draw.rounded_rectangle([(X, badge_y1), (X + bw + pad_x * 2, badge_y2)], radius=5, fill=gold)
         text_y = badge_y1 + (badge_h - bh) // 2 - b_bbox[1]
         draw.text((X + pad_x, text_y), brand_text, font=f_brand_m, fill=(255, 255, 255))
-
+        
     # base64エンコード
     buffer = io.BytesIO()
     img.save(buffer, format="JPEG", quality=95)
