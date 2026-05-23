@@ -92,18 +92,41 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     line_y = badge_bottom + 22
     draw.line([(X, line_y), (X + 50, line_y)], fill=gold, width=2)
 
-    # ④ タイトル改行ロジック改善（自然な区切り）
+# ④ タイトル改行ロジック（janomeで単語単位の自然な改行）
     t_y = line_y + 24
-    if len(title) <= 13:
-        lines = [title]
-    elif len(title) <= 26:
-        split = 13  # 13文字で自然に折り返す
-        lines = [title[:split], title[split:]]
-    else:
-        lines = [title[:13], title[13:26], title[26:]]
+    max_width = 460
 
-    for i, line in enumerate(lines):
-        size = 54 if i == 0 else 46
+    from janome.tokenizer import Tokenizer
+
+    def split_title_japanese(draw, title, max_w):
+        t = Tokenizer()
+        tokens = [token.surface for token in t.tokenize(title)]
+        lines = []
+        current = ""
+        is_first = True
+
+        for token in tokens:
+            size = 54 if is_first else 46
+            try:
+                font = ImageFont.truetype(SERIF_JP, size)
+            except:
+                font = ImageFont.load_default()
+            test = current + token
+            w = draw.textbbox((0, 0), test, font=font)[2]
+            if w > max_w and current:
+                lines.append((current, size))
+                current = token
+                is_first = False
+            else:
+                current = test
+
+        if current:
+            size = 54 if not lines else 46
+            lines.append((current, size))
+        return lines
+
+    title_lines = split_title_japanese(draw, title, max_width)
+    for line, size in title_lines:
         try:
             f = ImageFont.truetype(SERIF_JP, size)
         except:
