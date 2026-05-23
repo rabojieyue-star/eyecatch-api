@@ -177,22 +177,22 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
         draw.polygon([(mid_x, top_line_y - 6), (mid_x + 6, top_line_y), (mid_x, top_line_y + 6), (mid_x - 6, top_line_y)], fill=gold)
         draw.line([(mid_x + 14, top_line_y), (bx + bw - 24, top_line_y)], fill=gold, width=1)
 
-        # DEBELサブテキスト
+# DEBELサブテキスト
         try:
-            f_debel_sub = ImageFont.truetype(LORA, 13)
+            f_debel_sub = ImageFont.truetype(LORA, 18)      # ← 13→18に拡大
             f_debel_main = ImageFont.truetype(SERIF_JP, 26)
         except:
             f_debel_sub = f_debel_main = ImageFont.load_default()
 
         sub_bbox = draw.textbbox((0, 0), "DEBEL", font=f_debel_sub)
         sub_w = sub_bbox[2] - sub_bbox[0]
-        draw.text((bx + (bw - sub_w) // 2, top_line_y + 8), "DEBEL", font=f_debel_sub, fill=(*gold, 165))
+        draw.text((bx + (bw - sub_w) // 2, top_line_y + 6), "DEBEL", font=f_debel_sub, fill=(*gold, 200))  # ← 透明度も上げる
 
         # 痩身美容ラボ メインテキスト
         main_text = "痩身美容ラボ"
         main_bbox = draw.textbbox((0, 0), main_text, font=f_debel_main)
         main_w = main_bbox[2] - main_bbox[0]
-        draw.text((bx + (bw - main_w) // 2, by + 52), main_text, font=f_debel_main, fill=gold)
+        draw.text((bx + (bw - main_w) // 2, by + 56), main_text, font=f_debel_main, fill=gold)  # ← 位置微調整
 
         # 下部ダイヤ装飾
         bot_line_y = by + bh - 28
