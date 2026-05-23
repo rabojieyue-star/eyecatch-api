@@ -154,9 +154,21 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
         # 内枠
         draw.rectangle([(bx + 8, by + 8), (bx + bw - 8, by + bh - 8)], outline=(*gold, 120), width=1)
 
-        # コーナー装飾
-        for cx, cy, dx, dy in [(bx,by,1,0),(bx,by,0,1),(bx+bw,by,-1,0),(bx+bw,by,0,1),(bx,by+bh,1,0),(bx,by+bh,0,-1),(bx+bw,by+bh,-1,0),(bx+bw,by+bh,0,-1)]:
-            draw.rectangle([(cx, cy), (cx + dx*20, cy + dy*4 if dx else cy + dy*20 - cy + cy)], fill=gold)
+# コーナー装飾
+        corner_len = 20
+        corner_w = 4
+        # 左上
+        draw.rectangle([(bx, by), (bx + corner_len, by + corner_w)], fill=gold)
+        draw.rectangle([(bx, by), (bx + corner_w, by + corner_len)], fill=gold)
+        # 右上
+        draw.rectangle([(bx + bw - corner_len, by), (bx + bw, by + corner_w)], fill=gold)
+        draw.rectangle([(bx + bw - corner_w, by), (bx + bw, by + corner_len)], fill=gold)
+        # 左下
+        draw.rectangle([(bx, by + bh - corner_w), (bx + corner_len, by + bh)], fill=gold)
+        draw.rectangle([(bx, by + bh - corner_len), (bx + corner_w, by + bh)], fill=gold)
+        # 右下
+        draw.rectangle([(bx + bw - corner_len, by + bh - corner_w), (bx + bw, by + bh)], fill=gold)
+        draw.rectangle([(bx + bw - corner_w, by + bh - corner_len), (bx + bw, by + bh)], fill=gold)
 
         # 上部ダイヤ装飾
         mid_x = bx + bw // 2
