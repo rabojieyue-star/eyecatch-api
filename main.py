@@ -144,7 +144,7 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     # 下部ライン
     draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
   # ブランドバッジ（DEBELスタイリッシュ版）
-    if blog_type == "debel":
+   if blog_type == "debel":
         bw, bh = 240, 90
         bx = X
         by = H - 44 - bh - 10
@@ -163,32 +163,22 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
         draw.rectangle([(bx, by + bh - corner_len), (bx + corner_w, by + bh)], fill=gold)
         draw.rectangle([(bx + bw - corner_len, by + bh - corner_w), (bx + bw, by + bh)], fill=gold)
         draw.rectangle([(bx + bw - corner_w, by + bh - corner_len), (bx + bw, by + bh)], fill=gold)
-        # 上部ダイヤ装飾
-        mid_x = bx + bw // 2
-        top_line_y = by + 24
-        draw.line([(bx + 24, top_line_y), (mid_x - 14, top_line_y)], fill=gold, width=1)
-        draw.polygon([(mid_x, top_line_y - 6), (mid_x + 6, top_line_y), (mid_x, top_line_y + 6), (mid_x - 6, top_line_y)], fill=gold)
-        draw.line([(mid_x + 14, top_line_y), (bx + bw - 24, top_line_y)], fill=gold, width=1)
         # フォント
         try:
-            f_debel_sub = ImageFont.truetype(LORA, 18)
-            f_debel_main = ImageFont.truetype(SERIF_JP, 26)
+            f_debel_sub = ImageFont.truetype(LORA, 16)
+            f_debel_main = ImageFont.truetype(SERIF_JP, 28)
         except:
             f_debel_sub = f_debel_main = ImageFont.load_default()
-        # DEBELテキスト
+        # DEBELテキスト（上）中央配置
         sub_bbox = draw.textbbox((0, 0), "DEBEL", font=f_debel_sub)
         sub_w = sub_bbox[2] - sub_bbox[0]
-        draw.text((bx + (bw - sub_w) // 2, top_line_y + 5), "DEBEL", font=f_debel_sub, fill=(*gold, 200))
-        # 痩身美容ラボテキスト
+        sub_h = sub_bbox[3] - sub_bbox[1]
+        draw.text((bx + (bw - sub_w) // 2, by + 16), "DEBEL", font=f_debel_sub, fill=(*gold, 180))
+        # 痩身美容ラボ（下）中央配置
         main_text = "痩身美容ラボ"
         main_bbox = draw.textbbox((0, 0), main_text, font=f_debel_main)
         main_w = main_bbox[2] - main_bbox[0]
-        draw.text((bx + (bw - main_w) // 2, by + 48), main_text, font=f_debel_main, fill=gold)
-        # 下部ダイヤ装飾
-        bot_line_y = by + bh - 22
-        draw.line([(bx + 24, bot_line_y), (mid_x - 14, bot_line_y)], fill=gold, width=1)
-        draw.polygon([(mid_x, bot_line_y - 6), (mid_x + 6, bot_line_y), (mid_x, bot_line_y + 6), (mid_x - 6, bot_line_y)], fill=gold)
-        draw.line([(mid_x + 14, bot_line_y), (bx + bw - 24, bot_line_y)], fill=gold, width=1)
+        draw.text((bx + (bw - main_w) // 2, by + 42), main_text, font=f_debel_main, fill=gold)
     else:
         # 節約ラボバッジ（既存）
         brand_text = "節約ラボ｜setsuyaku-lab.jp"
