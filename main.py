@@ -144,14 +144,25 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     # 下部ライン
     draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
 
-    # ① ブランドをバッジ化
+# ブランドバッジ（Mサイズ 高さ38px）
     brand_text = "DEBEL | 痩身美容ラボ" if blog_type == "debel" else "節約ラボ｜setsuyaku-lab.jp"
-    b_bbox = draw.textbbox((0, 0), brand_text, font=f_brand)
+    try:
+        f_brand_m = ImageFont.truetype(LORA, 17)
+    except:
+        f_brand_m = ImageFont.load_default()
+    b_bbox = draw.textbbox((0, 0), brand_text, font=f_brand_m)
     bw = b_bbox[2] - b_bbox[0]
     bh = b_bbox[3] - b_bbox[1]
-    brand_y = H - 44
-    draw.rectangle([(X, brand_y - bh - 8), (X + bw + 20, brand_y)], fill=gold)
-    draw.text((X + 10, brand_y - bh - 4 - b_bbox[1]), brand_text, font=f_brand, fill=white)
+    pad_x, pad_y = 16, 10
+    badge_h = 38
+    badge_y1 = H - 44 - badge_h
+    badge_y2 = H - 44
+    draw.rounded_rectangle(
+        [(X, badge_y1), (X + bw + pad_x * 2, badge_y2)],
+        radius=5, fill=gold
+    )
+    text_y = badge_y1 + (badge_h - bh) // 2 - b_bbox[1]
+    draw.text((X + pad_x, text_y), brand_text, font=f_brand_m, fill=(255, 255, 255))
 
     # base64エンコード
     buffer = io.BytesIO()
