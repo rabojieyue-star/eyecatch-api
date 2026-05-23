@@ -139,7 +139,8 @@ def generate_eyecatch(image_url, title, category, blog_type="setsuyaku"):
     draw.line([(X, t_y + 16), (550, t_y + 16)], fill=gold, width=1)
 
     # サブコピー
-    draw.text((X, t_y + 30), "プロが教える節約の知恵", font=f_sub, fill=beige if blog_type == "debel" else (120, 85, 55))
+    sub_text = "プロが教える美容の知恵" if blog_type == "debel" else "プロが教える節約の知恵"
+    draw.text((X, t_y + 30), sub_text, ...)
 
     # 下部ライン
     draw.line([(44, H - 44), (580, H - 44)], fill=gold, width=1)
